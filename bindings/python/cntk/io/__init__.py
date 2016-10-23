@@ -5,11 +5,12 @@
 # ==============================================================================
 
 from .. import cntk_py
-from ..utils import typemap
+from ..tensor import ArrayMixin
+from ..utils import typemap, value_to_seq
 from cntk.device import use_default_device
 MAX_UI64 = int('0xffffffffffffffff', 16)
 
-class MinibatchData(cntk_py.MinibatchData):
+class MinibatchData(cntk_py.MinibatchData, ArrayMixin):
     '''
     Holds a minibatch of input data. This is never directly created, but
     only returned by :class:`MinibatchSource` instances.
@@ -34,8 +35,14 @@ class MinibatchData(cntk_py.MinibatchData):
         '''
         The value of the minibatch as a NumPy array.
         '''
-        from ..utils import value_to_seq
         return value_to_seq(self.m_data)
+
+    @property
+    def shape(self):
+        '''
+        The shape of the data in this minibatch as tuple.
+        '''
+        return self.m_data.shape().dimensions()
 
     @property
     def mask(self):
@@ -45,6 +52,13 @@ class MinibatchData(cntk_py.MinibatchData):
         invalid.
         '''
         return self.m_data.mask().to_numpy()
+
+    @property
+    def is_sparse(self):
+        '''
+        Whether the data in this minibatch is sparse.
+        '''
+        return self.m_data.is_sparse()
 
     def __len__(self):
         return self.num_sequences

@@ -78,7 +78,7 @@ def dynamic_axes(self):
 %eq_for(Variable, Variable_eq)
 %eq_for(Constant, Variable_eq)
 %eq_for(Parameter, Variable_eq)
-%eq_for(NDShape, NDShape_eq)
+%eq_for(Axis, Axis_eq)
 %eq_for(DeviceDescriptor, DeviceDescriptor_eq)
 
 
@@ -1285,12 +1285,12 @@ DATA_TYPE.__eq__ = lambda a,b: EQ(a,b)
 %py_eq_for(Variable, Variable_eq)
 %py_eq_for(Constant, Variable_eq)
 %py_eq_for(Parameter, Variable_eq)
-%py_eq_for(NDShape, NDShape_eq)
+%py_eq_for(Axis, Axis_eq)
 
 %py_hash_for(Variable, Variable_eq)
 %py_hash_for(Constant, Variable_eq)
 %py_hash_for(Parameter, Variable_eq)
-%py_hash_for(NDShape, NDShape_eq)
+%py_hash_for(Axis, Axis_eq)
 
 %py_eq_for(DeviceDescriptor, DeviceDescriptor_eq)
 

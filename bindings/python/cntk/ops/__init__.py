@@ -198,15 +198,15 @@ def convolution(convolution_map, operand, strides=(1,), sharing=[True],
 
 
     Example:
-	>>> img = np.reshape(np.arange(25.0, dtype = np.float32), (1, 5, 5))
-	>>> x = C.input_variable(img.shape)
-	>>> filter = np.reshape(np.array([2, -1, -1, 2], dtype = np.float32), (1, 2, 2))
-	>>> kernel = C.constant(value = filter)
-	>>> C.convolution(kernel , x, auto_padding = [False]).eval({x: img})
-	array([[[[[  6.,   8.,  10.,  12.],
-		  [ 16.,  18.,  20.,  22.],
-		  [ 26.,  28.,  30.,  32.],
-		  [ 36.,  38.,  40.,  42.]]]]], dtype=float32)
+    >>> img = np.reshape(np.arange(25.0, dtype = np.float32), (5, 5))
+    >>> x = C.input_variable(img.shape)
+    >>> filter = np.reshape(np.array([2, -1, -1, 2], dtype = np.float32), (1, 2, 2))
+    >>> kernel = C.constant(value = filter)
+    >>> C.convolution(kernel, x, auto_padding = [False]).eval({x: [img]})
+    array([[[[  6.,   8.,  10.,  12.],
+             [ 16.,  18.,  20.,  22.],
+             [ 26.,  28.,  30.,  32.],
+             [ 36.,  38.,  40.,  42.]]]], dtype=float32)
 
     Args:
         convolution_map: convolution filter weights, stored as a tensor of dimensions [outChannels x M1 x M2 x ... x Mn],
@@ -280,14 +280,14 @@ def pooling(operand, pooling_type, pooling_window_shape, strides=(1,), auto_padd
     N-dimensional pooling allows to create max or average pooling of any dimensions, stride or padding.
 
     Example:
-	>>> img = np.reshape(np.arange(16, dtype = np.float32), [1, 4, 4])
-	>>> x = C.input_variable(img.shape)
-	>>> C.pooling(x, C.AVG_POOLING, (2,2), (2,2)).eval({x : img})
-	array([[[[[  2.5,   4.5],
-		  [ 10.5,  12.5]]]]], dtype=float32)
-	>>> C.pooling(x, C.MAX_POOLING, (2,2), (2,2)).eval({x : img})
-	array([[[[[  5.,   7.],
-		  [ 13.,  15.]]]]], dtype=float32)
+    >>> img = np.reshape(np.arange(16, dtype = np.float32), [4, 4])
+    >>> x = C.input_variable(img.shape)
+    >>> C.pooling(x, C.AVG_POOLING, (2,2), (2,2)).eval({x : [img]})
+    array([[[[  2.5,   4.5],
+             [ 10.5,  12.5]]]], dtype=float32)
+    >>> C.pooling(x, C.MAX_POOLING, (2,2), (2,2)).eval({x : [img]})
+    array([[[[  5.,   7.],
+             [ 13.,  15.]]]], dtype=float32)
 
     Args:
         operand: pooling input
@@ -1549,11 +1549,11 @@ def reduce_log_sum(x, axis=None, name=''):
 
     Examples:
         >>> x = C.input_variable(shape=(3,2))
-        >>> x0 = np.reshape(np.arange(6.0, dtype=np.float32), (3,2))
+        >>> val = np.reshape(np.arange(6.0, dtype=np.float32), (3,2))
         >>> lse = C.reduce_log_sum(x)
-        >>> lse.eval({x:x0})
+        >>> lse.eval({x:[val]})
         array([[ 5.456193]], dtype=float32)
-        >>> np.log(np.sum(np.exp(x0)))
+        >>> np.log(np.sum(np.exp(val)))
         5.4561934
 
     Args:

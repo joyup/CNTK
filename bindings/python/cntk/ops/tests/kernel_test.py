@@ -99,10 +99,6 @@ def test_op_roipooling(input_map, input_rois, expected_fwd, expected_bkwd, devic
     exp_fwd_value     = AA(expected_fwd, dtype=dt)
     exp_bkwd_value    = AA(expected_bkwd, dtype=dt)
     
-    # adding batch and sequence axis
-    conv_input.shape     = (1,1) + conv_input.shape
-    roi_input.shape      = (1,1) + roi_input.shape
-    
     # adding batch, sequence and roi axis
     exp_fwd_value.shape  = (1,1,1) + exp_fwd_value.shape
     exp_bkwd_value.shape = (1,1,1,1) + exp_bkwd_value.shape
@@ -118,11 +114,15 @@ def test_op_roipooling(input_map, input_rois, expected_fwd, expected_bkwd, devic
         needs_gradient=False,
         name='b')
 
+    # adding batch and sequence axis
+    conv_input.shape     = (1,1) + conv_input.shape
+    roi_input.shape      = (1,1) + roi_input.shape
+    
     from cntk import roipooling
     input_op = roipooling(a, b, (3,3))
 
     forward_input = {a: conv_input, b: roi_input}
-    expected_backward = {a: exp_bkwd_value}
+    expected_backward = {a: [exp_bkwd_value]}
 
     unittest_helper(input_op,
                     forward_input, exp_fwd_value, expected_backward,

@@ -273,9 +273,8 @@ int main(int /*argc*/, char* /*argv*/[])
     TestMinibatchSourceWarmStart(10, 64, 640);
 
     // make sure minibatch source works with non-zero warm-start in the middle
-    // BUGBUG: these currently fails
-    //TestMinibatchSourceWarmStart(10, 64, 64);
-    //TestMinibatchSourceWarmStart(10, 64, 100); // test unaligned warm-start wrt minibatch size
+    TestMinibatchSourceWarmStart(10, 64, 64);
+    TestMinibatchSourceWarmStart(10, 64, 100); // test unaligned warm-start wrt minibatch size
 
     // Lets disable automatic unpacking of PackedValue object to detect any accidental unpacking 
     // which will have a silent performance degradation otherwise

@@ -96,6 +96,59 @@ void ReaderShim<ElemType>::StartDistributedMinibatchLoop(
 }
 
 template <class ElemType>
+void ReaderShim<ElemType>::SetCurrentSamplePosition(size_t currentSamplePosition)
+{
+    // Make sure there are no outstanding reads.
+    if (m_prefetchTask.valid())
+        m_prefetchTask.wait();
+
+    // Let's check that there is no outstanding copies.
+    // Wait on all events if there are any pending copy operations in flight.
+    if (m_dataTransferers[m_currentDataTransferIndex])
+        m_dataTransferers[m_currentDataTransferIndex]->WaitForCopyCPUToGPU();
+
+    // Set current position.
+    m_reader->SetCurrentSamplePosition(currentSamplePosition);
+
+    // Start prefetch.
+    auto localCurrentDataTransferIndex = m_currentDataTransferIndex;
+    // Starting the prefetch task. There is always a single async read in flight.
+    // When the network requests a new minibatch, we wait for the current async to finish, swap the buffers
+    // and kick off the new prefetch.
+    m_prefetchTask = std::async(m_launchType,
+        [this, localCurrentDataTransferIndex]()
+    {
+        return PrefetchMinibatch(localCurrentDataTransferIndex);
+    });
+}
+
+template <class ElemType>
+void ReaderShim<ElemType>::SetConfiguration(const ReaderConfiguration& config, const std::map<std::wstring, int>& inputDescriptions)
+{
+    // Make sure there are no outstanding reads.
+    if (m_prefetchTask.valid())
+        m_prefetchTask.wait();
+
+    // Let's check that there is no outstanding copies.
+    // Wait on all events if there are any pending copy operations in flight.
+    if (m_dataTransferers[m_currentDataTransferIndex])
+        m_dataTransferers[m_currentDataTransferIndex]->WaitForCopyCPUToGPU();
+
+    m_reader->SetConfiguration(config, inputDescriptions);
+
+    // Start prefetch.
+    auto localCurrentDataTransferIndex = m_currentDataTransferIndex;
+    // Starting the prefetch task. There is always a single async read in flight.
+    // When the network requests a new minibatch, we wait for the current async to finish, swap the buffers
+    // and kick off the new prefetch.
+    m_prefetchTask = std::async(m_launchType,
+        [this, localCurrentDataTransferIndex]()
+    {
+        return PrefetchMinibatch(localCurrentDataTransferIndex);
+    });
+}
+
+template <class ElemType>
 void ReaderShim<ElemType>::StartEpoch(const EpochConfiguration& config, const std::unordered_set<InputStreamDescription>& inputs)
 {
     // For adaptive minibatch, make sure there are no outstanding reads.

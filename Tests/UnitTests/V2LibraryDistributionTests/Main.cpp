@@ -16,7 +16,7 @@ bool Is1bitSGDAvailable()
     {
         const char* p = getenv("TEST_1BIT_SGD");
 
-        // Check the environment variable TEST_1BIT_SGD to decide whether to run on a CPU-only device.
+        // Check the environment variable TEST_1BIT_SGD to decide whether to run in the build
         if (p != nullptr && 0 == strcmp(p, "0"))
         {
             is1bitSGDAvailable = false;

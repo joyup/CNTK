@@ -21,10 +21,10 @@
     <ClCompile Include="..\V2LibraryTests\Common.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MinibatchSource.cpp">
+    <ClCompile Include="TrainerTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Trainer.cpp">
+    <ClCompile Include="MinibatchSourceTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

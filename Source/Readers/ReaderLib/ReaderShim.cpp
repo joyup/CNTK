@@ -29,7 +29,7 @@ ReaderShim<ElemType>::ReaderShim(ReaderFactory factory)
 
 template <class ElemType>
 ReaderShim<ElemType>::ReaderShim(ReaderPtr reader)
-    : m_deviceId(CPUDEVICE), m_dataTransferers(2, DataTransfererPtr()), m_currentDataTransferIndex(0), m_reader(reader), m_factory(nullptr), m_endOfEpoch(false)
+    : m_deviceId(CPUDEVICE), m_dataTransferers(2, DataTransfererPtr()), m_currentDataTransferIndex(0), m_reader(reader), m_factory(nullptr), m_endOfEpoch(false), m_currentSamplePosition(0)
 {
 }
 

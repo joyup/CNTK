@@ -238,7 +238,8 @@ void TestMinibatchSourceWarmStart(size_t numMBs, size_t minibatchSize, size_t wa
         bool distributed = minibatchSource->IsDistributed();
         if (distributed != (totalSamples >= warmStartSamples))
         {
-            ReportFailure("TestMinibatchSourceWarmStart failed");
+            ReportFailure("TestMinibatchSourceWarmStart failed in distributed state: expected %d, actual %d",
+                totalSamples >= warmStartSamples, distributed);
         }
 
         auto minibatchData = minibatchSource->GetNextMinibatch(minibatchSize);
@@ -247,12 +248,12 @@ void TestMinibatchSourceWarmStart(size_t numMBs, size_t minibatchSize, size_t wa
 
         if (minibatchData[featureStreamInfo].m_numSamples != expectedNumSamples)
         {
-            ReportFailure("TestMinibatchSourceWarmStart failed");
+            ReportFailure("TestMinibatchSourceWarmStart failed in sample count: expected %lu, actual %lu",
+                expectedNumSamples, minibatchData[featureStreamInfo].m_numSamples);
         }
 
         totalSamples += minibatchSize;
     }
-
 }
 
 int main(int /*argc*/, char* /*argv*/[])

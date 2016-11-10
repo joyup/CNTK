@@ -22,15 +22,29 @@
 namespace Microsoft { namespace MSR { namespace CNTK {
 
 template <class ElemType>
-ReaderShim<ElemType>::ReaderShim(ReaderFactory factory)
-    : m_factory(factory), m_deviceId(CPUDEVICE), m_dataTransferers(2, DataTransfererPtr()), m_currentDataTransferIndex(0), m_endOfEpoch(false)
+ReaderShim<ElemType>::ReaderShim() :
+    m_deviceId(CPUDEVICE),
+    m_dataTransferers(2, DataTransfererPtr()),
+    m_currentDataTransferIndex(0),
+    m_endOfEpoch(false),
+    m_currentSamplePosition(0),
+    m_reader(nullptr),
+    m_factory(nullptr)
 {
 }
 
 template <class ElemType>
-ReaderShim<ElemType>::ReaderShim(ReaderPtr reader)
-    : m_deviceId(CPUDEVICE), m_dataTransferers(2, DataTransfererPtr()), m_currentDataTransferIndex(0), m_reader(reader), m_factory(nullptr), m_endOfEpoch(false), m_currentSamplePosition(0)
+ReaderShim<ElemType>::ReaderShim(ReaderFactory factory) :
+    ReaderShim()
 {
+    m_factory = factory;
+}
+
+template <class ElemType>
+ReaderShim<ElemType>::ReaderShim(ReaderPtr reader) :
+    ReaderShim()
+{
+    m_reader = reader;
 }
 
 template <class ElemType>

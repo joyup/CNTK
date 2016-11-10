@@ -27,6 +27,9 @@ template <class ElemType>
 class ReaderShim : public IDataReader
 {
     friend class ::CNTK::CompositeMinibatchSource;
+private:
+    ReaderShim();
+
 public:
     explicit ReaderShim(ReaderFactory factory);
     explicit ReaderShim(ReaderPtr reader);

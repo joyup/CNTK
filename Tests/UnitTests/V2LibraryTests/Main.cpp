@@ -48,6 +48,8 @@ int main()
     // may interfere with device selection by freezing default device
     DeviceSelectionTests();
 
+    LearnerTests();
+
     NDArrayViewTests();
     TensorTests();
     FunctionTests();

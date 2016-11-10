@@ -193,6 +193,8 @@ bool BlockRandomizer::GetNextSequenceDescriptions(size_t sampleCount, std::vecto
         return true;
     }
 
+    bool endOfEpoch = (m_globalSamplePosition + sampleCount >= m_epochSize + m_epochStartPosition);
+
     sampleCount = std::min(sampleCount, m_epochSize + m_epochStartPosition - m_globalSamplePosition);
     assert(sampleCount != 0);
 
@@ -202,7 +204,7 @@ bool BlockRandomizer::GetNextSequenceDescriptions(size_t sampleCount, std::vecto
 
     // Randomizing sequences
     result = m_sequenceRandomizer->GetNextSequenceDescriptions(sampleCount, windowRange);
-    return false;
+    return endOfEpoch;
 }
 
 // Decimates sequences and load/unloads chunks using infromation of the SequenceRandomizer.

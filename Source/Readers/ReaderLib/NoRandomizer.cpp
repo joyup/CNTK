@@ -107,9 +107,10 @@ size_t NoRandomizer::GetCurrentSamplePosition()
 Sequences NoRandomizer::GetNextSequences(size_t sampleCount)
 {
     Sequences result;
+    result.m_endOfEpoch = (m_globalSamplePosition + sampleCount >= m_config.m_totalEpochSizeInSamples * (m_config.m_epochIndex + 1));
+    
     if (m_globalSamplePosition >=  m_config.m_totalEpochSizeInSamples * (m_config.m_epochIndex + 1))
     {
-        result.m_endOfEpoch = true;
         return result;
     }
 
